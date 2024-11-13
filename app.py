@@ -11,14 +11,15 @@ os.makedirs(CHAT_DIR, exist_ok=True)
 app = Flask(__name__)
 
 # Serve static HTML (front end) on GET /
+# Shai
 @app.route('/')
 def serve_home():
     return send_from_directory('.', 'index.html')
-
+# Ilya 
 @app.route('/<room>')
 def serve_page(room):
     return send_file('index.html')
-
+# Ilya
 @app.route('/api/chat/<room>', methods=['POST'])
 def post_message(room):
     username = request.form.get('username')
@@ -43,7 +44,7 @@ def post_message(room):
         return "Message sent successfully", 200
     except Exception as e:
         return f"Error saving message: {str(e)}", 500
-
+# Shai
 @app.route('/api/chat/<room>', methods=['GET'])
 def get_messages(room):
     filename = os.path.join(CHAT_DIR, f'messages_{room}.txt')
