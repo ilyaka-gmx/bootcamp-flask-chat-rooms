@@ -4,6 +4,19 @@ from datetime import datetime
 import os
 import MySQLdb
 
+def wait_for_db(max_retries=30, delay=2):
+    for attempt in range(max_retries):
+        try:
+            conn = get_db_connection()
+            conn.close()
+            print("Successfully connected to database")
+            return True
+        except MySQLdb.Error as e:
+            print(f"Database connection attempt {attempt + 1} failed. Retrying in {delay} seconds...")
+            time.sleep(delay)
+    return False
+
+
 app = Flask(__name__)
 
 # MySQL Database Configuration
@@ -41,7 +54,10 @@ def init_database():
     conn.close()
 
 # Initialize database on app startup
-init_database()
+if wait_for_db():
+    init_database()
+else:
+    print("Failed to connect to database after maximum retries")
 
 # Serve static HTML (front end) on GET /
 @app.route('/')
