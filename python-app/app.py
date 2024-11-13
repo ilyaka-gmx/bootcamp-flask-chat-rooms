@@ -2,16 +2,48 @@ import flask
 from flask import Flask, send_from_directory, send_file, request, Response
 from datetime import datetime
 import os
+import MySQLdb
 
 app = Flask(__name__)
 
-# Ensure chat directory exists
-CHAT_DIR = os.path.join(os.getcwd(), 'chat')
-os.makedirs(CHAT_DIR, exist_ok=True)
-app = Flask(__name__)
+# MySQL Database Configuration
+DB_HOST = os.environ.get('DB_HOST', 'localhost')
+DB_USER = os.environ.get('DB_USER', 'root')
+DB_PASSWORD = os.environ.get('DB_PASSWORD', '')
+DB_NAME = os.environ.get('DB_NAME', 'chatrooms')
+
+def get_db_connection():
+    return MySQLdb.connect(
+        host=DB_HOST,
+        user=DB_USER,
+        passwd=DB_PASSWORD,
+        db=DB_NAME,
+        charset='utf8'
+    )
+
+def init_database():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Create messages table if not exists
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS messages (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        room VARCHAR(255) NOT NULL,
+        username VARCHAR(255) NOT NULL,
+        message TEXT NOT NULL,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+    ''')
+    
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+# Initialize database on app startup
+init_database()
 
 # Serve static HTML (front end) on GET /
-# Shai
 @app.route('/')
 def serve_home():
     return send_from_directory('.', 'index.html')
@@ -33,32 +65,47 @@ def post_message(room):
     if not message:
         return "Message is required", 400
     
-    # Format the message with timestamp
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    formatted_message = f"[{timestamp}] {username}: {message}\n"
-    
-    # Create and write to room-specific file
-    filename = os.path.join(CHAT_DIR, f'messages_{room}.txt')
+    # Insert message into MySQL database
+    conn = get_db_connection()
+    cursor = conn.cursor()
     
     try:
-        with open(filename, 'a', encoding='utf-8') as f:
-            f.write(formatted_message)
+        cursor.execute(
+            "INSERT INTO messages (room, username, message) VALUES (%s, %s, %s)", 
+            (room, username, message)
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
         return "Message sent successfully", 200
     except Exception as e:
+        conn.rollback()
         return f"Error saving message: {str(e)}", 500
     
 # Shai
 @app.route('/api/chat/<room>', methods=['GET'])
 def get_messages(room):
-    filename = os.path.join(CHAT_DIR, f'messages_{room}.txt')
+    conn = get_db_connection()
+    cursor = conn.cursor()
     
     try:
-        if not os.path.exists(filename):
-            return ""
+        # Retrieve messages for specific room
+        cursor.execute(
+            "SELECT timestamp, username, message FROM messages WHERE room = %s ORDER BY timestamp", 
+            (room,)
+        )
         
-        with open(filename, 'r', encoding='utf-8') as f:
-            messages = f.read()
-        return Response(messages, mimetype='text/plain')
+        # Format messages like the original text file output
+        messages = []
+        for row in cursor.fetchall():
+            timestamp, username, message = row
+            formatted_message = f"[{timestamp.strftime('%Y-%m-%d %H:%M:%S')}] {username}: {message}\n"
+            messages.append(formatted_message)
+        
+        cursor.close()
+        conn.close()
+        
+        return Response(''.join(messages), mimetype='text/plain')
     except Exception as e:
         return f"Error reading messages: {str(e)}", 500
 

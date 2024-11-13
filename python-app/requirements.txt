@@ -1,3 +1,4 @@
 #add flask
 # Contributed by Ilya
 flask
+mysqlclient
