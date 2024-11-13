@@ -27,7 +27,7 @@ A Flask-based real-time chat application that allows users to:
 
 1. Clone the repository:
 
-```mermaid
+```python
 git clone https://github.com/yourusername/bootcamp-flask-chat-rooms.git
 ```
 
