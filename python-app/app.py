@@ -15,10 +15,12 @@ app = Flask(__name__)
 @app.route('/')
 def serve_home():
     return send_from_directory('.', 'index.html')
+
 # Ilya 
 @app.route('/<room>')
 def serve_page(room):
     return send_file('index.html')
+
 # Ilya
 @app.route('/api/chat/<room>', methods=['POST'])
 def post_message(room):
@@ -44,6 +46,7 @@ def post_message(room):
         return "Message sent successfully", 200
     except Exception as e:
         return f"Error saving message: {str(e)}", 500
+    
 # Shai
 @app.route('/api/chat/<room>', methods=['GET'])
 def get_messages(room):
@@ -60,4 +63,4 @@ def get_messages(room):
         return f"Error reading messages: {str(e)}", 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
