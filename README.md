@@ -1,72 +1,105 @@
+
+
 # bootcamp-flask-chat-rooms
 
-A Flask-based real-time chat application that allows users to:
+A Flask-based real-time chat application with MySQL database support running in Docker containers.
 
-- Create and join different chat rooms
-- Send and receive messages in real-time
-- See active users in each room
-- Simple and intuitive user interface
-
-## Features
+# Features
 
 - Multiple chat rooms support
-- Real-time message updates using Flask-SocketIO
-- User presence tracking
+- Real-time message updates
+- Message persistence using MySQL
 - Clean and responsive design
+- Containerized deployment
 
-## Technologies Used
+# Technologies Used
 
-- Python
+- Python 3.9
 - Flask
-- Flask-SocketIO
+- MySQL 8.0
+- Docker
+- Docker Compose
 - HTML/CSS
 - JavaScript
-- Socket.IO
 
-## Setup & Installation
+# Setup & Installation
 
 1. Clone the repository:
-
-```python
+```bash
 git clone https://github.com/yourusername/bootcamp-flask-chat-rooms.git
 ```
 
+2. Make sure you have Docker and Docker Compose installed on your system
 
-2. Set up Python environment with pyenv:
-
-
-```python
-pyenv install 3.9.0  # or your preferred Python version
-pyenv local 3.9.0   # set local Python version
-python -m venv venv  # create virtual environment
-source venv/bin/activate  # activate virtual environment (Unix)
-```
-# or
-```python
-venv\Scripts\activate  # activate virtual environment (Windows)
+3. Navigate to the project directory:
+```bash
+cd bootcamp-flask-chat-rooms
 ```
 
-3. Install dependencies:
-
-```python
-pip install -r requirements.txt
+4. Build and run the containers:
+```bash
+docker-compose build
 ```
 
-
-4. Run the application:
-
-```python
-python app.py
+5. Verify the images were created:
+```bash
+docker images
 ```
 
-5. Open your browser and navigate to `http://localhost:5000`
+6. Start the containers:
+```bash
+docker-compose up
+```
 
-## Usage
+To run containers in detached mode (background):
+```bash
+docker-compose up -d
+```
 
-1. Enter your username
-2. Create a new room or join an existing one
-3. Start chatting!
+7. Verify the containers are running:
+```bash
+docker ps
+# or for more detailed view
+docker-compose ps
+```
 
-## Contributing
+8. Access the application at:
+```
+http://localhost:5000
+```
+
+**Note**: To stop the containers when running in detached mode, use:
+```bash
+docker-compose down
+```
+
+# Environment Variables
+
+The following environment variables are configured in docker-compose.yml:
+
+- DB_HOST=db
+- DB_USER=root
+- DB_PASSWORD=mysecretpassword
+- DB_NAME=chatrooms
+
+# Docker Services
+
+The application runs two containers:
+- Web service (Flask application)
+- MySQL database
+
+# Development
+
+To make changes to the application:
+
+1. Modify the code in python-app directory
+2. Rebuild the containers:
+```bash
+docker-compose down
+docker-compose build
+docker-compose up
+```
+
+# Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

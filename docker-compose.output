@@ -1,0 +1,32 @@
+docker-compose up
+Creating network "bootcamp-flask-chat-rooms_default" with the default driver
+Creating bootcamp-flask-chat-rooms_db_1 ... done
+Creating bootcamp-flask-chat-rooms_web_1 ... done
+Attaching to bootcamp-flask-chat-rooms_db_1, bootcamp-flask-chat-rooms_web_1
+db_1   | 2024-11-13 13:52:38+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.0.40-1.el9 started.
+db_1   | 2024-11-13 13:52:38+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+db_1   | 2024-11-13 13:52:38+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.0.40-1.el9 started.
+db_1   | '/var/lib/mysql/mysql.sock' -> '/var/run/mysqld/mysqld.sock'
+web_1  | Traceback (most recent call last):
+web_1  |   File "/app/app.py", line 1, in <module>
+web_1  |     import flask
+web_1  |   File "/usr/local/lib/python3.9/site-packages/flask/__init__.py", line 7, in <module>
+web_1  |     from .app import Flask as Flask
+web_1  |   File "/usr/local/lib/python3.9/site-packages/flask/app.py", line 28, in <module>
+web_1  |     from . import cli
+web_1  |   File "/usr/local/lib/python3.9/site-packages/flask/cli.py", line 18, in <module>
+web_1  |     from .helpers import get_debug_flag
+web_1  |   File "/usr/local/lib/python3.9/site-packages/flask/helpers.py", line 16, in <module>
+web_1  |     from werkzeug.urls import url_quote
+web_1  | ImportError: cannot import name 'url_quote' from 'werkzeug.urls' (/usr/local/lib/python3.9/site-packages/werkzeug/urls.py)
+db_1   | 2024-11-13T13:52:39.076285Z 0 [Warning] [MY-011068] [Server] The syntax '--skip-host-cache' is deprecated and will be removed in a future release. Please use SET GLOBAL host_cache_size=0 instead.
+db_1   | 2024-11-13T13:52:39.085564Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 8.0.40) starting as process 1
+bootcamp-flask-chat-rooms_web_1 exited with code 1
+db_1   | 2024-11-13T13:52:39.136206Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+db_1   | 2024-11-13T13:52:39.352169Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+db_1   | 2024-11-13T13:52:39.670379Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+db_1   | 2024-11-13T13:52:39.670657Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+db_1   | 2024-11-13T13:52:39.677383Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.
+db_1   | 2024-11-13T13:52:39.721828Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /var/run/mysqld/mysqlx.sock
+db_1   | 2024-11-13T13:52:39.721922Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.0.40'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.
+
